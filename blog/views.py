@@ -37,6 +37,7 @@ class PostDetialView(DetailView):
 
 class UserDetialView(DetailView):
     model = User
+    template_name = 'blog/user_detial.html'
 
 class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Post
