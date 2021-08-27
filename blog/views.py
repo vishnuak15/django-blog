@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from django.urls import reverse_lazy, reverse
+from django.core.paginator import Paginator
 # Create your views here.
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .models import *
@@ -15,12 +16,52 @@ def home(request):
     }
     return render(request,'blog/home.html',context)
 
+    
+# def PostList(request):
+#     if request.method == 'GET':
+#         query = request.GET.get('query','')
+#         if query:
+#             post = Post.objects.filter(title__icontains=query).order_by('-date_posted')
+#             p = Paginator(post,3)
+#             page = request.GET.get('page')
+#             posts = p.get_page(page)
+#             nums = "a" * posts.paginator.num_pages
+#             context = {
+#                 'posts':posts,
+#                 'page':page,
+#                 'query':query,
+#             }
+#             return render(request,'blog/home.html',context )
+#         else:
+#             post = Post.objects.all().order_by('-date_posted')
+#             p = Paginator(post,3)
+#             page = request.GET.get('page')
+#             posts = p.get_page(page)
+#             nums = "a" * posts.paginator.num_pages
+#             context = {
+#                 'posts':posts,
+#                 'page':page,
+#                 'query':query,
+#             }
+#             return render(request,'blog/home.html',context )
+
 class PostListView(ListView):
     model = Post
     template_name = 'blog/home.html'
     context_object_name = 'posts'
     ordering = ['-date_posted']
     paginate_by = 3
+    
+    def get_queryset(self):
+        query = self.request.GET.get('query','')
+        posts = Post.objects.all().order_by('-date_posted')
+        if query:
+            posts = Post.objects.filter(title__icontains=query).order_by('-date_posted')
+        else:
+            posts = Post.objects.all().order_by('-date_posted')
+        return posts
+        
+        
 
 class UserPostListView(ListView):
     model = Post
