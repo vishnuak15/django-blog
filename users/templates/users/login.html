@@ -14,21 +14,24 @@
                 Login
             </button>
         </div>
+        <br>
     </form>
     <div class="border-top pt-3">
         <small class="text-muted">
             Need an account ? <a href=" {% url 'register' %} ">Sign Up Now</a>
         </small>
+        <br>
+        <small class="text-muted ml-2">
+            <a href="{% url 'password_reset' %}">Forgot your Password ?</a>
+        </small>
     </div>
 </div>
 {% else %}
 <div class="content-section">
-    <h2>You are already logged in</h2>
+    <h2>You are already logged In</h2>
     <div class="border-top pt-3">
         <small class="text-muted">
-        <a href=" {% url 'login' %} ">Click here to Login</a> 
-        <br>
-        <a href=" {% url 'register' %} ">Click here to Register</a>  
+        <a href=" {% url 'logout' %} ">Please log out and try again</a> 
         </small>
     </div>
 </div>
