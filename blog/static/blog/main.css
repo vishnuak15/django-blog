@@ -33,6 +33,10 @@ ul {
     font-weight: 500;
 }
 
+a {
+    text-align: right;
+}
+
 .content-section {
     background: #ffffff;
     padding: 10px 20px;

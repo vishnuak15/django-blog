@@ -1,8 +1,9 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
+from django.urls import reverse_lazy, reverse
 # Create your views here.
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from .models import Post
+from .models import *
 from django.views.generic import ListView,DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.models import User
 
@@ -10,6 +11,7 @@ from django.contrib.auth.models import User
 def home(request):
     context = {
         'posts': Post.objects.all(),
+        'comments': Comment.objects.all(),
     }
     return render(request,'blog/home.html',context)
 
@@ -33,6 +35,8 @@ class UserPostListView(ListView):
 class PostDetialView(DetailView):
     model = Post
 
+class UserDetialView(DetailView):
+    model = User
 
 class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Post
@@ -53,6 +57,44 @@ class PostCreateView(LoginRequiredMixin,CreateView):
         form.instance.author = self.request.user
         return super().form_valid(form)
 
+class CommentCreateView(LoginRequiredMixin,CreateView):
+    model = Comment
+    fields = ['content',]
+
+    def form_valid(self,form):
+        form.instance.author = self.request.user
+        form.instance.post_id = self.kwargs['pk']
+        return super().form_valid(form)
+
+class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Comment
+
+    def get_success_url(self):
+        comment = self.get_object()
+        id=comment.post_id
+        return reverse_lazy('post-detial', kwargs={'pk': id})
+
+    def test_func(self):
+        comment = self.get_object()
+        if self.request.user == comment.author:
+            return True
+        return False
+
+class CommentUpdateView(LoginRequiredMixin,UserPassesTestMixin,UpdateView):
+    model = Comment
+    fields = ['content',]
+
+    def form_valid(self,form):
+        return super().form_valid(form)
+
+    def test_func(self):
+        comment = self.get_object()
+        if self.request.user == comment.author:
+            return True
+        return False
+
+
+
 class PostUpdateView(LoginRequiredMixin,UserPassesTestMixin,UpdateView):
     model = Post
     fields = ['title','content']
@@ -66,6 +108,7 @@ class PostUpdateView(LoginRequiredMixin,UserPassesTestMixin,UpdateView):
         if self.request.user == post.author:
             return True
         return False
+
 
 
 
