@@ -61,12 +61,12 @@
             <div class="col-md-4">
                 <div class="content-section">
                     <h3>Our Sidebar</h3>
-                    <p class='text-muted'>You can put any information here you'd like.
+                    <p class='text-muted'>Order By based on the given choice
                         <ul class="list-group">
-                            <li class="list-group-item list-group-item-light">Latest Posts</li>
-                            <li class="list-group-item list-group-item-light">Announcements</li>
-                            <li class="list-group-item list-group-item-light">Calendars</li>
-                            <li class="list-group-item list-group-item-light">etc</li>
+                            <a href="{% url 'blog-home'  %}" class="list-group-item list-group-item-light btn btn-secondary">Latest Posts</a>
+                            <a href="{% url 'oldposts'  %}" name="orderby" value="date_posted" class="list-group-item list-group-item-light btn btn-secondary">Oldest Posts</a>
+                            <a href="{% url 'postitle'  %}" class="list-group-item list-group-item-light btn btn-secondary">Post Title</a>
+                            <a href="{% url 'username'  %}" name="orderby" value="-date_posted" class="list-group-item list-group-item-light btn btn-secondary">Username</a>
                         </ul>
                     </p>
                 </div>
